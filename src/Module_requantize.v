@@ -1,9 +1,9 @@
 /*module requantize {
 	input clock, 		//Master clock
 	input reset,		//master reset, synchronous, active high
-	
+
 	input [4:0] Nquant, 		//No. of output quantization bits
-	
+
 	input  [17:0] datain, 		//input data
 	input		  endatain,		//input data clock enable
 	output [17:0] dataout		//output data
@@ -80,7 +80,7 @@ begin
 	state3: 										//mesmo necessário??????????????
 		if(cont2 == shift)
 			next_state <= state0;
-	
+
 end
 
 always @*									//output logic
@@ -98,7 +98,7 @@ begin
 		begin
 			if(flag_2 == 1 && (flag_1 > 1 || SR[0] == 1))		//primeira cada dec 1 e mais que um 1 em toda a parte fracionária -> parte frac > 0.5
 				SR <= SR + 1'd1;								//ou primeira casa dec 1 e bit menos sig da parte inteira ímpar
-		end	
+		end
 		state3:
 		begin
 			for (j = 16 ; i > 0 ; i = i - 1)
@@ -110,12 +110,3 @@ begin
 end
 
 end module
-
-
-
-
-
-//primeiro bit da parte fracionária igual a 1
-//parte frac < 0.5, não é necessário acertos
-
-//se for par também não são necessários acertos

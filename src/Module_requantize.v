@@ -50,10 +50,10 @@ always @ (posedge clock)
 begin
 	if (reset)
 		begin
-		shift <= 5'd17 - Nquant;
+		shift <= 5'd18 - Nquant;
 		dataout <= 18'd0;
-		cont1 = 3'd0;
-		cont2 = 3'd0;
+		cont1 <= 3'd0;
+		cont2 <= 3'd0;
 		flag_1 <= 18'd0;
 		flag_2 <= 1'd0;
 		SR <= datain;

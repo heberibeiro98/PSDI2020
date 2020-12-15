@@ -10,20 +10,20 @@ module lowpass(
 	input [17:0] coefdata
 );
 
-reg [17:0] myRAM [0:64];
+reg [17:0] myRAM [0:64]; //Array de registos (65 registos de 18 bits cada)
 
 integer i;
 
 reg [17:0] yk;
-reg [6:0] cont1;
-reg [6:0] cont2;
+reg [6:0] cont1; 
+reg [6:0] cont2; 
 
-reg [3:0] state;
+reg [3:0] state; 
 reg [3:0] nextstate;
 
 reg [17:0] coef;
 
-localparam [2:0]
+localparam [2:0] //Estados
 	state0 = 3'd0;
 	state1 = 3'd1;
 	state2 = 3'd2;
@@ -51,7 +51,6 @@ begin
 		begin
 		if(cont1 == 64)
 			nextstate <= state2;
-		cont <= 7'd0;
 		end
 
 	state2:

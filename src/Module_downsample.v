@@ -9,11 +9,11 @@ module downsample(
 	);
 input clock;
 input reset;
-input [3:0] Nfreq;
-input [17:0] datain;
-input endatain;
+input  [3:0]  Nfreq;
+input  [17:0] datain;
+input 				endatain;
 output [17:0] dataout;
-output endataout;
+output 				endataout;
 
 //registo auxiliar
 reg cont;
@@ -27,9 +27,8 @@ begin
 	end
 	else
 	begin
-		if(DIN_RDY)
+		if(endatain)
 		begin
-			endatain <= 1'b1;
 			if(cont == 0)
 			begin
 				endataout <= 1'b1;
@@ -47,5 +46,5 @@ begin
 		end
 	end
 end
-	
+
 endmodule

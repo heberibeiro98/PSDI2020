@@ -6,24 +6,25 @@ module downsample(
 	endatain, // in clock enable, Fs=48kHz
 	dataout,  // output data
 	endataout // out clock enable, Fs = 48kHz/Nfreq
-	);
+);
+	
 input clock;
 input reset;
 input  [3:0]  Nfreq;
 input  [17:0] datain;
-input 				endatain;
+input endatain;
 output [17:0] dataout;
-output 				endataout;
+output endataout;
 
 //registo auxiliar
-reg cont;
+reg [3:0] cont;
 
 always @ (posedge clock)
 begin
 	if(reset)
 	begin
 		dataout <= 18'b0;
-		cont <= 0;
+		cont <= 4'd0;
 	end
 	else
 	begin
@@ -36,7 +37,7 @@ begin
 				cont <= (Nfreq - 1);
 			end
 			else
-				//endataout <= 1'b0;
+				endataout <= 1'b0;
 				cont <= (cont - 1);
 		else
 		begin

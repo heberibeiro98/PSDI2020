@@ -41,34 +41,33 @@ end
 
 always @(posedge clock)
 begin
-	state0:
-		begin
-		if(endata)
-			nextstate <= state1;
-		end
+	case(state)
+		state0:
+			begin
+			if(endata)
+				nextstate <= state1;
+			end
 
-	state1:
-		begin
-		if(cont1 == 64)
+		state1:
+			begin
+			if(cont1 == 64)
+				nextstate <= state2;
+			end
+
+		state2:
+			nextstate <= state3;
+
+		state3:
+			begin
+			if(cont2 == 64)
+				nextstate <= state4;
+				
+			else
+				nextstate <= state2;
+			end
+
+		state4:
 			nextstate <= state2;
-		end
-
-	state2:
-		nextstate <= state3;
-
-	state3:
-		begin
-		if(cont2 == 64)
-			nextstate <= state4;
-			
-		else
-			nextstate <= state2;
-		end
-
-	state4:
-		nextstate <= state2;
-
-
 end
 
 always @(posedge clock)

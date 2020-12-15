@@ -12,6 +12,8 @@ module lowpass(
 
 reg [17:0] myRAM [0:64];
 
+integer i;
+
 reg [17:0] yk;
 reg [6:0] cont;
 
@@ -42,25 +44,26 @@ end
 always @(posedge clock)
 begin
 	state0:
-	begin
+		begin
 		if(endata)
 			nextstate <= state1;
-	end
+		end
 
 	state1:
-	begin
+		begin
 		if(cont == 64)
 			nextstate <= state2;
-	end
+		cont <= 7'd0;
+		end
 
 	state2:
-		nextstate <= state2;
+		nextstate <= state3;
 
 	state3:
-	begin
+		begin
 		if(cont == 64)
 			nextstate <= state4;
-	end
+		end
 
 	state4:
 		nextstate <= state0;
@@ -73,13 +76,23 @@ begin
 	case(state)
 
 		state1:
-		begin
+			begin
 			myRAM[cont] <= datain;
 			cont <= cont + 1;
-		end
+			end
 
 		state2:
-		begin
+			coefaddress <= cont;			//num estado diferente
+
+		state3:
+			begin
+			coef <= coefdata;
+			yk <= yk + (myRAM[cont] * coef);
+			cont <= cont + 1;
+			end
+
+		state4:
+			begin
 			yk <= 17'd0;
 			cont <= 7'd0;
 
@@ -87,22 +100,11 @@ begin
 				myRAM[i+1] <= myRAM[i];
 
 			myRAM[0] <= datain;
+			end
 
-		end
-
-		state3:
-
-		coefaddress <= cont;			//num estado diferente
-
-		begin
-			coef <= coefdata;
-			yk <= yk + (myRAM[cont] * coef);
-			cont <= cont + 1;
-		end
-
-		state4:
-		begin
+		state5:
+			begin
 			dataout <= yk;
-		end
+			end
 
 end module

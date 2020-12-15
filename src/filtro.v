@@ -20,17 +20,18 @@ reg [3:0] nextstate;
 
 reg [17:0] coef;
 	
-localparam [1:0]
-	state0 = 2'd0;
-	state1 = 2'd1;
-	state2 = 2'd2;
-	state3 = 2'd3;
-	state4 = 2'd4;
+localparam [2:0]
+	state0 = 3'd0;
+	state1 = 3'd1;
+	state2 = 3'd2;
+	state3 = 3'd3;
+	state4 = 3'd4;
 	
 always @(posedge clock)
 begin
 	if(reset)
 	begin
+		cont <= 7'd0;
 		state <= state0;
 	end
 	
@@ -47,16 +48,23 @@ begin
 	end
 	
 	state1:
-		nextstate <= state2;
+	begin
+		if(cont == 64)
+			nextstate <= state2;
+	end
 	
 	state2:
+		nextstate <= state2;
+	
+	state3:
 	begin
 		if(cont == 64)
 			nextstate <= state3;
 	end
 	
-	state3:
+	state4:
 		nextstate <= state0;
+		
 			
 end
 
@@ -65,6 +73,12 @@ begin
 	case(state)
 	
 		state1:
+		begin
+			myRAM[cont] <= datain;
+			cont <= cont + 1;
+		end
+	
+		state2:
 		begin
 			yk <= 17'd0;
 			cont <= 7'd0;
@@ -76,14 +90,14 @@ begin
 				
 		end
 		
-		state2:
+		state3:
 		begin
 			coef <= coefdata;
 			yk <= yk + (myRAM[cont] * coef);
 			cont <= cont + 1;
 		end
 		
-		state3:
+		state4:
 		begin
 			dataout <= yk;
 		end	

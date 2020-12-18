@@ -1,22 +1,22 @@
  module psdi_dsp(
-      input  clock,
-			input  reset,
+		input  clock,
+		input  reset,
 
-			input [7:0] switches,
+		input [7:0] switches,
 
-			input data_en,
+		input data_en,
 			
-			input [3:0] Nfreq,
-			input [4:0] Nquant,
+		input [3:0] Nfreq,
+		input [4:0] Nquant,
 
-			output [6:0] RAM_coefs_addr,
-			input  [7:0] RAM_coefs_dataout,
+		output [6:0] RAM_coefs_addr,
+		input  [7:0] RAM_coefs_dataout,
 
-			input [17:0] right_in,
-			input [17:0] left_in,
+		input [17:0] right_in,
+		input [17:0] left_in,
 
-			output signed [17:0] right_out,
-			output signed [17:0] left_out
+		output signed [17:0] right_out,
+		output signed [17:0] left_out
 );
 
 
@@ -84,7 +84,7 @@ canal canal_R(
 	.clock (clock),
 	.reset (reset),
 	
-	.switches (switches)
+	.switches (switches [3:0]),
 	
 	.data_en (data_en),
 	
@@ -103,7 +103,7 @@ canal canal_L(
 	.clock (clock),
 	.reset (reset),
 	
-	.switches (switches)
+	.switches (switches [7:4]),
 	
 	.Nfreq (Nfreq),
 	.Nquant (Nquant),

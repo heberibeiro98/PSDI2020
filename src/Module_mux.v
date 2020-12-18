@@ -4,7 +4,7 @@ module mux(
 
 	input sel,
 
-	input [17:0] indata,
+	input [17:0] datain,
 	input [17:0] bypass,
 
 	output [6:0] outdata
@@ -13,7 +13,7 @@ module mux(
 always @ (posedge clock)
 begin
   if (sel)
-    outdata <= indata;
+    outdata <= datain;
   else
     outdata <= bypass;
 end

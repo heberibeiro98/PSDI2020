@@ -1,14 +1,3 @@
-/*module requantize {
-	input clock, 		//Master clock
-	input reset,		//master reset, synchronous, active high
-
-	input [4:0] Nquant, 		//No. of output quantization bits
-
-	input  [17:0] datain, 		//input data
-	input		  endatain,		//input data clock enable
-	output [17:0] dataout		//output data
-};*/
-
 module requantize (
 	clock, 		//Master clock
 	reset,		//master reset, synchronous, active high

@@ -10,18 +10,18 @@ module lowpass(
 	input [17:0] coefdata
 );
 
-reg [17:0] myRAM [0:64]; //Array de registos (65 registos de 18 bits cada)
+reg signed [17:0] myRAM [0:64]; //Array de registos (65 registos de 18 bits cada)
 
 integer i;
 
 reg [42:0] yk;
-reg [6:0] cont1; 
-reg [6:0] cont2; 
+reg [6:0] cont1;
+reg [6:0] cont2;
 
 reg [3:0] state; 
 reg [3:0] nextstate;
 
-reg [17:0] coef;
+reg signed [17:0] coef;
 
 localparam [2:0] //Estados
 	state0 = 3'd0;
@@ -44,88 +44,73 @@ always @*
 begin
 	case(state)
 		state0:
-			begin
-			if(endata)
-				nextstate <= state1;
-			end
-
-		state1:
-			begin
-			if(cont1 == 64)
-				nextstate <= state2;
-			end
-
-		state2:
-			nextstate <= state3;
-
-		state3:
-			begin
-			if(cont2 == 64)
-				nextstate <= state4;
-				
-			else
-				nextstate <= state2;
-			end
-
-		state4:
-		begin	
+		begin
 			if(endatain)
-				nextstate <= state5;
-			
-			else
-				nextstate <= state0;
+				nextstate <= state1;
 		end
 		
-		state5:
+		state1:
 			nextstate <= state2;
+
+		state2:
+		begin
+			nextstate <= state3;
+		end
+		
+		state3:
+		begin
+			if(cont < 65)
+				nextstate <= state2;
+			if(cont == 65)
+				nextstate <= state4;
+		end
+		
+		state4:
+			nextstate <= state5;
+
+		state5:
+		begin
+			if(endatain)
+					nextstate <= state1;
+		end
+		
 end
 
 always @*
 begin
 	case(state)
 	
-		state0:
+		state0:								//inicialização
 		begin
-			cont1 <= 7'd0;
-			cont2 <= 7'd0;
+			cont <= 7'd0;
 			
-			for(i = 0; i < 65; i++)
-				myRAM[i] = 18'd0;
-				
+			for(i = 0; i < 65; i = i + 1)
+				myRAM[i] = 18'd0;				
 		end
 
-		state1:
+		state1:								//carrega nova amostra
 		begin
-			if(endata)
-			begin
-				myRAM[cont1] <= datain;
-				cont1 <= cont1 + 1;
-			end	
+			myRAM[0] <= datain;
 		end
 
-		state2:
-			coefaddress <= cont2;			
+		state2:								//envia endereço coeficiente
+			coefaddress <= cont;
 
-		state3:
-			begin
+		state3:								//recebe coeficiente e faz convulução da amostra mais antiga com o coeficiente mais recente
+		begin
 			coef <= coefdata;
-			yk <= yk + (myRAM[cont2] * coef);
-			cont2 <= cont2 + 1;
-			end
-
-		state4:
-		begin
-			dataout <= yk[29:12];
-			yk <= 17'd0;
-			cont2 <= 7'd0;
+			yk <= yk + (myRAM[cont] * coef);
+			cont = cont + 1;
 		end
 		
-		state5:
-		begin	
+		state4:								//envia a saída e faz shit ao register array
+		begin
+			dataout <= yk[29:12];
 			for(i = 0; i < 65; i = i + 1)
-					myRAM[i+1] <= myRAM[i];
-
-				myRAM[0] <= datain;
+				myRAM[i+1] <= myRAM[i];
 		end
+		
+		state5:								//fica à esoera de unma nova amostra
+			cont <= 0;			
 
 end module

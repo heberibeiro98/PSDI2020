@@ -31,7 +31,7 @@ lowpass lowpass_m(
  
 mux mux1(
 	.clock (clock),
-	.sel (switches),
+	.sel (switches[0]),
 	.datain(filter_out),
 	.bypass(data_in),
 	.outdata(mux1_out)
@@ -49,7 +49,7 @@ downsample downsample_m(
 
 mux mux2(
 	.clock (clock),
-    .sel (switches),
+    .sel (switches[1]),
     .datain(downsample_out),
     .bypass(mux1_out),
     .outdata(mux2_out)
@@ -66,7 +66,7 @@ requantize requantizer_m(
 
 mux mux3(
     .clock (clock),
-    .sel (switches),
+    .sel (switches[2]),
     .datain(requantizer_out),
     .bypass(mux2_out),
     .outdata(mux3_out)
@@ -83,7 +83,7 @@ interpol interpol_m(
 
 mux mux4(
     .clock (clock),
-    .sel (switches),
+    .sel (switches[3]),
     .datain(interpol_out),
     .bypass(mux3_out),
     .outdata(mux4_out)
